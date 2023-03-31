@@ -81,7 +81,11 @@ foreach ($provider in $provider_list){
 [string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | % {[char]$_})
 Write-Host "Your randomly-generated suffix for Azure resources is $suffix"
 $resourceGroupName = "dp000-$suffix"
-
+$tags = @{
+    "owner" = "DanielMartin"
+    "location" = "Trondheim"
+    "purpose" = "Testing"
+}
 # Choose a random region
 Write-Host "Finding an available region. This may take several minutes...";
 $delay = 0, 30, 60, 90, 120 | Get-Random
@@ -129,7 +133,7 @@ $Region = $locations.Get($rand).Location
     }
 }
 Write-Host "Creating $resourceGroupName resource group in $Region ..."
-New-AzResourceGroup -Name $resourceGroupName -Location $Region | Out-Null
+New-AzResourceGroup -Name $resourceGroupName -Location $Region -Tag $tags | Out-Null
 
 # Create Synapse workspace
 $synapseWorkspace = "synapse$suffix"
